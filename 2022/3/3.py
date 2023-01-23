@@ -25,5 +25,16 @@ def rucksack_priorities(rucksack_items):
 
 print(rucksack_priorities(rucksack_items))
 
-def badges(rucksack_items):
-    pass
+def badges(rucksack_items, group_size=3):
+    total =  0
+    group = []
+    for elf in rucksack_items:
+        if len(group) < group_size:
+            group.append(set(elf))
+        if len(group) == group_size:
+            badge = group[0].intersection(*group)
+            total += get_priority(badge)
+            group.clear()
+    return total
+
+print(badges(rucksack_items))
