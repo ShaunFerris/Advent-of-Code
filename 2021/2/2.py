@@ -20,3 +20,20 @@ def xy_displacement(instructions):
     return depth, position, depth * position
 
 print(xy_displacement(instructions))
+
+def aim_xy_displacement(instructions):
+    aim = 0
+    depth = 0
+    position = 0
+    for action in instructions:
+        action = action.split()
+        if action[0] == 'up':
+            aim -= int(action[1])
+        elif action[0] == 'down':
+            aim += int(action[1])
+        elif action[0] == 'forward':
+            position += int(action[1])
+            depth += aim * int(action[1])
+    return depth, position, depth * position
+
+print(aim_xy_displacement(instructions))
