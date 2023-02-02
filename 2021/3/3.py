@@ -1,5 +1,4 @@
 #Test data
-#Actual data
 with open('test.txt', 'r') as f:
     test_bit_strings = [f.strip() for f in f.readlines()]
 
@@ -35,7 +34,6 @@ def epsilon_rate(data):
             epsilon_string += '1'
     epsilon_number = int(epsilon_string, base=2)
     return epsilon_string, epsilon_number
-
 
 gam = gamma_rate(bit_strings)
 ep = epsilon_rate(bit_strings)
