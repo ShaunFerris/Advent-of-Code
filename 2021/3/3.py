@@ -8,7 +8,7 @@ with open('input.txt', 'r') as f:
     bit_strings = [f.strip() for f in f.readlines()]
 
 def most_common(lst):
-    return max(set(lst), key=lst.count)
+    return max(lst, key=lst.count)
 
 def gamma_rate(data):
     '''Gets the most common bit in each string index for any number
