@@ -1,3 +1,6 @@
+from copy import deepcopy
+import re
+
 #Test data
 with open('test.txt', 'r') as f:
     test_bit_strings = [f.strip() for f in f.readlines()]
@@ -35,6 +38,16 @@ def epsilon_rate(data):
     epsilon_number = int(epsilon_string, base=2)
     return epsilon_string, epsilon_number
 
-gam = gamma_rate(bit_strings)
-ep = epsilon_rate(bit_strings)
+gam = gamma_rate(test_bit_strings)
+ep = epsilon_rate(test_bit_strings)
 print(gam, ep, gam[1] * ep[1])
+
+def oxygen_rating(data):
+    most_common_bits = gamma_rate(data)[0]
+    considering = deepcopy(data)
+    for b in most_common_bits:
+        r = re.compile('^' + most_common_bits[:most_common_bits.index(b)])
+        considering = list(filter(r.match, considering))
+    return considering
+
+print(oxygen_rating(test_bit_strings))
