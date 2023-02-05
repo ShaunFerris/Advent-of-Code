@@ -1,5 +1,4 @@
 from copy import deepcopy
-import re
 
 #Test data
 with open('test.txt', 'r') as f:
@@ -43,11 +42,41 @@ ep = epsilon_rate(test_bit_strings)
 print(gam, ep, gam[1] * ep[1])
 
 def oxygen_rating(data):
-    most_common_bits = gamma_rate(data)[0]
-    considering = deepcopy(data)
-    for b in most_common_bits:
-        r = re.compile('^' + most_common_bits[:most_common_bits.index(b)])
-        considering = list(filter(r.match, considering))
-    return considering
+    oxygen_data = deepcopy(data)
+    count = 0
+    while len(oxygen_data) > 1:
+        zeros, ones = 0, 0
+        for bit_string in oxygen_data:
+            if bit_string[count] == '0':
+                zeros += 1
+            elif bit_string[count] == '1':
+                ones += 1
+        if zeros > ones:
+            oxygen_data = [bit_string for bit_string in oxygen_data if bit_string[count] == '0']
+        elif ones > zeros or ones == zeros:
+            oxygen_data = [bit_string for bit_string in oxygen_data if bit_string[count] == '1']
+        count += 1
+        oxygen_number = int(oxygen_data[0], base=2)
+    return oxygen_data, oxygen_number
 
-print(oxygen_rating(test_bit_strings))
+def co2_rating(data):
+    co2_data = deepcopy(data)
+    count = 0
+    while len(co2_data) > 1:
+        zeros, ones = 0, 0
+        for bit_string in co2_data:
+            if bit_string[count] == '0':
+                zeros += 1
+            elif bit_string[count] == '1':
+                ones += 1
+        if zeros > ones:
+            co2_data = [bit_string for bit_string in co2_data if bit_string[count] == '1']
+        elif ones > zeros or ones == zeros:
+            co2_data = [bit_string for bit_string in co2_data if bit_string[count] == '0']
+        count += 1
+        co2_number = int(co2_data[0], base=2)
+    return co2_data, co2_number
+
+o = oxygen_rating(bit_strings)[1]
+c = co2_rating(bit_strings)[1]
+print(o * c)
