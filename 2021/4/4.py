@@ -77,9 +77,40 @@ def check_number(called_num, winning_seqs, board_states):
                     board_states[board][index_1][index_2] = 1
     return board_states
 
+def play_game(numbers, board_data):
+    '''Plays the bingo game until the first winning board is found, returns a version of the 
+    winning sequence dictionary with the winning sequence removed,
+    and the final number that was called as a tuple.'''
+    
+    processed_data = winning_seqs(board_data)
+    tracker = board_states(processed_data)
+    called_sequence = numbers
+    for num in called_sequence:
+        tracker = check_number(num, processed_data, tracker)
+        for board, seqs in tracker.items():
+            for index, seq in enumerate(seqs):
+                if sum(seq) == 5:
+                    winner = processed_data[board][index]
+                    return winner, num
 
-processed_data = winning_seqs(test_boards_data)
-print(processed_data)
-tracker = board_states(processed_data)
-print('\n', tracker)
-print('\n', check_number(22, processed_data, tracker))
+def find_winning_score(numbers, board_data):
+    '''Main function for problem part one. Takes the boards data and numbers and
+    plays the game, then calculates the score from the winnning board by summing
+    the unmarked numbers and multiplying by the final number called.'''
+
+    winning_seq, final_num = play_game(numbers, board_data)
+    original_boards = rows_by_board(board_data)
+    #import pdb
+    #pdb.set_trace()
+    for board, seqs in original_boards.items():
+        for index, seq in enumerate(seqs):
+            if seq == winning_seq: #BUG: Currently this condition is returning ture when the lists are different, not sure why
+                del(original_boards[board][index])
+                winning_sum = 0
+                for i in original_boards[board]:
+                    winning_sum += sum(i)
+                score = winning_sum * final_num
+                return score
+
+
+print(find_winning_score(test_numbers, test_boards_data))
