@@ -6,7 +6,7 @@ with open('testinput.txt', 'r') as f:
     test_numbers = [int(num) for num in test_boards_data.pop(0).split(',')]
 
 #process real data
-with open('testinput.txt', 'r') as f:
+with open('input.txt', 'r') as f:
     boards_data = [row.strip() for row in f.readlines()]
     numbers = [int(num) for num in boards_data.pop(0).split(',')]
 
@@ -84,33 +84,32 @@ def play_game(numbers, board_data):
     
     processed_data = winning_seqs(board_data)
     tracker = board_states(processed_data)
-    called_sequence = numbers
-    for num in called_sequence:
+    for index_1, num in enumerate(numbers):
         tracker = check_number(num, processed_data, tracker)
         for board, seqs in tracker.items():
-            for index, seq in enumerate(seqs):
+            for index_2, seq in enumerate(seqs):
                 if sum(seq) == 5:
-                    winner = processed_data[board][index]
-                    return winner, num
+                    winner = processed_data[board][index_2]
+                    called_seq = numbers[:index_1]
+                    return winner, num, called_seq
 
 def find_winning_score(numbers, board_data):
     '''Main function for problem part one. Takes the boards data and numbers and
     plays the game, then calculates the score from the winnning board by summing
     the unmarked numbers and multiplying by the final number called.'''
 
-    winning_seq, final_num = play_game(numbers, board_data)
+    winning_seq, final_num, called_seq = play_game(numbers, board_data)
     original_boards = rows_by_board(board_data)
     #import pdb
     #pdb.set_trace()
     for board, seqs in original_boards.items():
-        for index, seq in enumerate(seqs):
-            if seq == winning_seq: #BUG: Currently this condition is returning ture when the lists are different, not sure why
-                del(original_boards[board][index])
-                winning_sum = 0
-                for i in original_boards[board]:
-                    winning_sum += sum(i)
-                score = winning_sum * final_num
-                return score
+        if winning_seq in seqs:
+            original_boards[board].remove(winning_seq)
+            winning_sum = 0
+            for seq in seqs:
+                for num in seq:
+                    winning_sum += num if num not in called_seq else 0
+            return winning_sum * final_num
 
 
-print(find_winning_score(test_numbers, test_boards_data))
+print(find_winning_score(numbers, boards_data))
