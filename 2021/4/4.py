@@ -100,8 +100,6 @@ def find_winning_score(numbers, board_data):
 
     winning_seq, final_num, called_seq = play_game(numbers, board_data)
     original_boards = rows_by_board(board_data)
-    #import pdb
-    #pdb.set_trace()
     for board, seqs in original_boards.items():
         if winning_seq in seqs:
             original_boards[board].remove(winning_seq)
@@ -111,5 +109,30 @@ def find_winning_score(numbers, board_data):
                     winning_sum += num if num not in called_seq else 0
             return winning_sum * final_num
 
-
 print(find_winning_score(numbers, boards_data))
+
+def last_to_win(numbers, board_data):
+    '''Calculates which board will be the last of all given boards to get a win,
+    given a sequence of called numbers. The calculates the score when that board does 
+    eventually win in the same way as previously.'''
+
+    won_boards = []
+    processed_data = winning_seqs(board_data)
+    tracker = board_states(processed_data)
+    for index_1, num in enumerate(numbers):
+        tracker = check_number(num, processed_data, tracker)
+        for board, seqs in tracker.items():
+            for index_2, seq in enumerate(seqs):
+                if sum(seq) == 5:
+                    won_boards.append(board)
+                    if len(set(won_boards)) == len(tracker) - 1:
+                        loser = [i for i in tracker if i not in set(won_boards)][0]
+                        loser_score = 0
+                        original_boards = rows_by_board(board_data)
+                        for seq in original_boards[loser]:
+                            for num in seq:
+                                loser_score += num if num not in numbers[:index_1 + 2] else 0
+                        loser_score *= numbers[:index_1 + 2][-1]
+                        return loser, loser_score
+            
+print(last_to_win(numbers, boards_data))
