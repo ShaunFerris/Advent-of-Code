@@ -19,7 +19,8 @@ def grid_builder(x=10, y=10):
 def expand_line(line):
     '''Creates a list representing each point along a line from the 
     point representation of a line (eg: 9,7 -> 7,7) as point a to 
-    point b.'''
+    point b. Determines the lines orientation so that future functions
+    can ignore diagonal lines, as this is part of the problem parameters.'''
 
     x1, x2 = int(line.split()[0].split(',')[0]), int(line.split()[2].split(',')[0])
     y1, y2 = int(line.split()[0].split(',')[1]), int(line.split()[2].split(',')[1])
@@ -31,6 +32,10 @@ def expand_line(line):
         orientation = 'diagonal'
     x_range = list(range(x1, x2 + 1)) if x1 < x2 else list(range(x2, x1 + 1))
     y_range = list(range(y1, y2 + 1)) if y1 < y2 else list(range(y2, y1 + 1))
+    if x1 > x2:
+        x_range.reverse()
+    if y1 > y2:
+        y_range.reverse()
     while len(x_range) < len(y_range):
         x_range.append(x_range[0])
     while len(y_range) < len(x_range):
@@ -64,7 +69,7 @@ def map_lines(lines_data, grid_size=10, mode=0):
             if expand_line(line)[1] == 'vertical' or expand_line(line)[1] == 'horizontal':
                 points = expand_line(line)[0]
                 grid = plot_points(points, grid)
-        else:
+        elif mode == 1:
             points = expand_line(line)[0]
             grid = plot_points(points, grid)
     return grid
@@ -93,6 +98,6 @@ def count_hotspots(diagram, threshold=2):
     return count
 
 
-diagram = map_lines(lines, grid_size=1000, mode=0)
+diagram = map_lines(lines, grid_size=1000, mode=1)
 print(count_hotspots(diagram))
-#readable_diagram(lines, grid_size=1000, mode=0)
+#readable_diagram(test_lines, grid_size=10, mode=1)
