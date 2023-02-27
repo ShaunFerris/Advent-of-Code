@@ -1,5 +1,8 @@
 #This could probably be done better using numpy but I'm going to try not using it.
 
+'''Finished solution, works for parts one and two of the problem, change the mode parameter
+of the map_lines function to one to make it process diagonal lines for part two.'''
+
 #Process testing data
 with open('testinput.txt', 'r') as f:
     test_lines = [line.strip() for line in f.readlines()]
