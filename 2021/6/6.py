@@ -11,7 +11,8 @@ def organise_school(school):
 
 def increment_day(organised_school, no_of_days):
     '''Takes an orgainised school of fish and then calculates how it
-    would look after a given number of days.'''
+    would look after a given number of days, following the rules for
+    lanternfish reproduction laid out in the problem statement.'''
     
     while no_of_days > 0:
         for clock, count in organised_school.items():
@@ -27,5 +28,5 @@ def increment_day(organised_school, no_of_days):
     return organised_school
 
 school = organise_school(fish)
-after = increment_day(school, 80)
+after = increment_day(school, 256)
 print(sum(after.values()))
