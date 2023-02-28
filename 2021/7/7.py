@@ -30,3 +30,25 @@ def calc_convergence(map):
 map = map_positions(positions)
 convergence = calc_convergence(map)
 print(min(convergence.values()))
+
+#Part two
+
+def exponential_calc_convergence(map):
+    '''Works the same as the other convergence calc function, but each step
+    costs exponentially more fuel.'''
+
+    destination_by_fuel_cost = {}
+    for destination in map.keys():
+        for start, count in map.items():
+            if start == destination:
+                continue
+            else:
+                distance = abs(start - destination)
+                fuel_units = distance * (distance + 1) // 2
+                fuel_cost = fuel_units * count
+                destination_by_fuel_cost[destination] = destination_by_fuel_cost.get(destination, 0) + fuel_cost
+    return destination_by_fuel_cost
+
+map = map_positions(positions)
+convergence = exponential_calc_convergence(map)
+print(min(convergence.values()))
