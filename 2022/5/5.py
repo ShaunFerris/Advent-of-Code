@@ -61,3 +61,7 @@ def multi_arrange_crates(input):
     for line in instructions:
         move_multi(line, crate_map)
     return crate_map
+
+print(top_crates(arrange_crates('input.txt')))
+
+print(top_crates(multi_arrange_crates('input.txt')))
