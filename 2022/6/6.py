@@ -35,3 +35,8 @@ def buffer_scan_message(buffer):
                 SOM_address = buffer.find(slice) + 14
                 break
     return (SOM_address)
+
+file = open('input.txt')
+buffer = file.read()
+print(buffer_scan(buffer))
+print(buffer_scan_message(buffer))
