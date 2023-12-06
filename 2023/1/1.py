@@ -22,4 +22,32 @@ def sumDecode(calList):
     return out
 
 
-print(sumDecode(lines))
+print(f"Part One: {sumDecode(lines)}")
+
+
+def decodeWithWords(calValue):
+    replaceMap = {
+        "zero": "z0o",
+        "one": "o1e",
+        "two": "t2o",
+        "three": "t3e",
+        "four": "f4r",
+        "five": "f5e",
+        "six": "s6x",
+        "seven": "s7n",
+        "eight": "e8t",
+        "nine": "n9e",
+    }
+    for key, value in replaceMap.items():
+        calValue = calValue.replace(key, value)
+    return decode(calValue)
+
+
+def sumDecodeWithWords(calList):
+    out = 0
+    for i in calList:
+        out += int(decodeWithWords(i))
+    return out
+
+
+print(f"Part Two: {sumDecodeWithWords(lines)}")
