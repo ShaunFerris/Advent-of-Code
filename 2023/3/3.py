@@ -18,7 +18,7 @@ example = [
 
 
 def get_symbol_coords(input_data):
-    symbol_key = ["*", "%", "$", "@", "#", "=", "/", "+"]
+    symbol_key = ["*", "%", "$", "@", "#", "=", "/", "+", "-", "&"]
     coords = []
     for line_index, line in enumerate(input_data):
         for char_index, char in enumerate(line):
@@ -47,12 +47,12 @@ def resolve_number(input_data, edge_coord):
         for i in target[position::-1]:
             if i.isdigit():
                 number = i + number
-            elif i == ".":
+            else:
                 break
         for i in target[position + 1 :]:
             if i.isdigit():
                 number += i
-            elif i == ".":
+            else:
                 break
     return number
 
@@ -61,11 +61,12 @@ def search_edges(input_data, edge_list):
     hit_numbers = []
     last_hit = None
     for coord in edge_list:
-        hit = resolve_number(input_data, coord)
-        if hit != last_hit:
-            last_hit = hit
-            if hit.isdigit():
-                hit_numbers.append(int(hit))
+        if coord[0] < len(input_data):
+            hit = resolve_number(input_data, coord)
+            if hit != last_hit:
+                last_hit = hit
+                if hit.isdigit():
+                    hit_numbers.append(int(hit))
     return hit_numbers
 
 
@@ -79,4 +80,4 @@ def solve(input_data):
     return total
 
 
-print(f"Part One: {solve(example)}")
+print(f"Part One: {solve(lines)}")
