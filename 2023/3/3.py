@@ -81,3 +81,31 @@ def solve(input_data):
 
 
 print(f"Part One: {solve(lines)}")
+
+
+def find_stars(input_data):
+    coords = []
+    for line_index, line in enumerate(input_data):
+        for char_index, char in enumerate(line):
+            if char == "*":
+                coords.append((line_index, char_index))
+    return coords
+
+
+def gear_ratio(input_data, star_coord):
+    edges = get_edges(star_coord)
+    nums = search_edges(input_data, edges)
+    if len(nums) == 2:
+        return nums[0] * nums[1]
+    return 0
+
+
+def solve_gears(input_data):
+    total = 0
+    stars = find_stars(input_data)
+    for star in stars:
+        total += gear_ratio(input_data, star)
+    return total
+
+
+print(f"Part Two: {solve_gears(lines)}")
