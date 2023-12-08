@@ -50,13 +50,30 @@ def find_location(seed: int, processed_almanac: Dict[str, List[List]]) -> int:
     return next
 
 
-def get_all_seed_locations(almanac: List[str]):
+def get_all_seed_locations(almanac: List[str], ranges: bool) -> List[int]:
     seed_locations = []
     seeds, seedless_almanac = pull_seeds(almanac)
+    if ranges:
+        seeds = get_seeds_from_ranges(seeds)
     processed_almanac = process_almanac(seedless_almanac)
     for seed in seeds:
         seed_locations.append(find_location(seed, processed_almanac))
     return seed_locations
 
 
-print(f"Part One: {min(get_all_seed_locations(lines))}")
+# print(f"Part One: {min(get_all_seed_locations(lines, ranges=False))}")
+
+
+def get_seeds_from_ranges(processed_seeds: List[int]) -> List[int]:
+    seeds_from_ranges = []
+    for index, seed in enumerate(processed_seeds):
+        if index % 2 != 0:
+            continue
+        if index == len(processed_seeds) - 1:
+            break
+        for i in range(seed, processed_seeds[index + 1] + seed):
+            seeds_from_ranges.append(i)
+    return seeds_from_ranges
+
+
+print(f"Part Two: {min(get_all_seed_locations(lines, ranges=True))}")
