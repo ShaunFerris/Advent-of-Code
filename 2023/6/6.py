@@ -39,4 +39,16 @@ def product_of_winning_strats(raw_data: List[str]) -> List[Tuple[int]]:
     return reduce(lambda a, b: a * b, winning_strats_by_race)
 
 
-print(product_of_winning_strats(lines))
+print(f"Part One: {product_of_winning_strats(lines)}")
+
+
+def process_single_race_data(raw_data: List[str]) -> Tuple[int]:
+    time_line, distance_line = raw_data
+    time = ("").join(re.findall("\d+", time_line))
+    distance = ("").join(re.findall("\d+", distance_line))
+    return (int(time), int(distance))
+
+
+processed = process_single_race_data(lines)
+print(processed)
+print(f"Part Two: {get_number_of_wins(processed)}")
