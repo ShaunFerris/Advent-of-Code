@@ -66,13 +66,52 @@ class Hand:
         return self.hand_types[tuple(sorted(Counter(self.hand).values()))]
 
 
-def solve(input_data: List[str]) -> int:
-    winnings = 0
-    hands = [Hand(line) for line in input_data]
+class HandWithJoker(Hand):
+    card_types = {
+        "A": 13,
+        "K": 12,
+        "Q": 11,
+        "T": 10,
+        "9": 9,
+        "8": 8,
+        "7": 7,
+        "6": 6,
+        "5": 5,
+        "4": 4,
+        "3": 3,
+        "2": 2,
+        "J": 1,
+    }
+
+    def get_hand_type(self) -> int:
+        if "J" not in self.hand:
+            return self.hand_types[tuple(sorted(Counter(self.hand).values()))]
+        else:
+            c = Counter(self.hand)
+            jokers_count = c["J"]
+            if c["J"] == 5:
+                return self.hand_types[(5,)]
+            del c["J"]
+            highest_values = list(sorted(c.values(), reverse=True))
+            for i in range(len(highest_values)):
+                while jokers_count and highest_values[i] < 5:
+                    highest_values[i] += 1
+                    jokers_count -= 1
+            return self.hand_types[tuple(sorted(highest_values))]
+
+
+def solve(input_data: List[str], joker_rule: bool) -> int:
+    if joker_rule:
+        hands = [HandWithJoker(line) for line in input_data]
+    else:
+        hands = [Hand(line) for line in input_data]
     hands.sort()
+
+    winnings = 0
     for index, hand in enumerate(hands):
         winnings += (index + 1) * hand.bid
     return winnings
 
 
-print(f"Part One: {solve(lines)}")
+print(f"Part One: {solve(lines, joker_rule=False)}")
+print(f"Part Two: {solve(lines, joker_rule=True)}")
