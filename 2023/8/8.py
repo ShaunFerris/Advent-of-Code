@@ -1,3 +1,6 @@
+from typing import List, Tuple
+import re
+
 with open("input.txt") as f:
     lines = [f.strip() for f in f.readlines()]
 
@@ -24,5 +27,25 @@ class navigation_loop:
 
 
 test_instructions = test_lines[0]
-for i in navigation_loop(test_instructions):
-    print(i)
+
+
+def process_nav_map(input_data: List[str]):
+    """
+    Process the input data. Arg: raw input data as a list of lines.
+    Returns: a tuple with the navigation instruction string at idx 0 and a dict that maps nodes
+    to child nodes at idx 1
+    """
+    navigation_instructions = input_data[0]
+    raw_nav_map = input_data[2:]
+    nav_map = {
+        processed_line[0]: tuple(
+            ("").join(re.findall(r"[A-Z]", item))
+            for item in processed_line[1].split(",")
+        )
+        for processed_line in (line.split("=") for line in raw_nav_map)
+    }
+
+    return (navigation_instructions, nav_map)
+
+
+print(process_nav_map(test_lines))
