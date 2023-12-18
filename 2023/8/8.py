@@ -26,9 +26,6 @@ class NavigationLoop:
         return current_instruction
 
 
-test_instructions = test_lines[0]
-
-
 def process_nav_map(input_data: List[str]) -> Tuple[str, Dict[str, Tuple[str]]]:
     """
     Process the input data. Arg: raw input data as a list of lines.
@@ -39,7 +36,7 @@ def process_nav_map(input_data: List[str]) -> Tuple[str, Dict[str, Tuple[str]]]:
     raw_nav_map = input_data[2:]
     nav_map = {
         processed_line[0].strip(): tuple(
-            ("").join(re.findall(r"[A-Z]", item))
+            ("").join(re.findall(r"[A-Z1-9]", item))
             for item in processed_line[1].split(",")
         )
         for processed_line in (line.split("=") for line in raw_nav_map)
@@ -52,7 +49,7 @@ def chart_course(input_data: List[str]) -> int:
     """
     Calculate the number of steps from node AAA to node ZZZ following the instructions in the
     provided navigation loop
-    Arg: raw input data as a list of lines
+    Arg: Raw input data as a list of lines
     Returns: Number of steps between nodes as an int
     """
     nav_instructions, nav_map = process_nav_map(input_data=input_data)
@@ -69,3 +66,31 @@ def chart_course(input_data: List[str]) -> int:
 
 
 print(f"Part One: {chart_course(lines)}")
+
+
+def simulataneous_chart_course(input_data: List[str]) -> int:
+    """
+    Calculate the number of steps taken when all courses starting from nodes that end in "A" are
+    followed simultaneously until all courses are on a node ending in "Z"
+    Arg: Raw input data
+    Returns: Number of steps taken between nodes
+    """
+    nav_instructions, nav_map = process_nav_map(input_data=input_data)
+    nav_loop = NavigationLoop(nav_instructions)
+    instruction_key = {"R": 1, "L": 0}
+    step_count = 0
+    current_nodes = [node for node in nav_map.keys() if node[-1] == "A"]
+    for instruction in nav_loop:
+        current_nodes = [
+            nav_map[node][instruction_key[instruction]] for node in current_nodes
+        ]
+        step_count += 1
+        if step_count % 1000000 == 0:
+            print(f"Steps taken so far: {step_count}")
+            print(f"Current nodes: {current_nodes}")
+        if all(node[-1] == "Z" for node in current_nodes):
+            break
+    return step_count
+
+
+print(simulataneous_chart_course(lines))
