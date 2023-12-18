@@ -1,4 +1,5 @@
 from typing import List, Tuple, Dict
+from math import lcm
 import re
 
 with open("input.txt") as f:
@@ -80,17 +81,22 @@ def simulataneous_chart_course(input_data: List[str]) -> int:
     instruction_key = {"R": 1, "L": 0}
     step_count = 0
     current_nodes = [node for node in nav_map.keys() if node[-1] == "A"]
+    steps_to_hit = {
+        index: 0 for index, node in enumerate(current_nodes) if node[-1] == "A"
+    }
     for instruction in nav_loop:
         current_nodes = [
             nav_map[node][instruction_key[instruction]] for node in current_nodes
         ]
         step_count += 1
-        if step_count % 1000000 == 0:
-            print(f"Steps taken so far: {step_count}")
-            print(f"Current nodes: {current_nodes}")
-        if all(node[-1] == "Z" for node in current_nodes):
+        for idx, node in enumerate(current_nodes):
+            if node[-1] == "Z":
+                steps_to_hit[idx] = (
+                    step_count if steps_to_hit[idx] == 0 else steps_to_hit[idx]
+                )
+        if all(step_count != 0 for step_count in steps_to_hit.values()):
             break
-    return step_count
+    return lcm(*steps_to_hit.values())
 
 
-print(simulataneous_chart_course(lines))
+print(f"Part Two:{simulataneous_chart_course(lines)}")
