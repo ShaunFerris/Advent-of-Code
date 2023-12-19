@@ -14,10 +14,6 @@ def process_history(line: str) -> List[int]:
     return [int(value) for value in line.split()]
 
 
-test_processed_line = process_history(test_lines[0])
-test_heavy_line = process_history(lines[0])
-
-
 def generate_diff_line(processed_line: List[int]) -> List[int]:
     """
     Take a processed line (array of integers) and return the array of it's differences between
@@ -71,13 +67,37 @@ def extrapolate(difference_matrix: List[List[int]]) -> int:
                 return previous_last_digit
 
 
-def sum_extrapolations(input_data: List[str]) -> int:
+def backwards_extrapolate(difference_matrix: List[List[int]]) -> int:
+    """
+    Take a matrix of differences and extrapolate the value before the first value in the history
+    that generated the matrix.
+    Return the extrapolated value as an integer.
+    """
+    reversed_matrix = difference_matrix[::-1]
+    first = True
+    for idx, diff_array in enumerate(reversed_matrix):
+        if first:
+            diff_array.insert(0, 0)
+            previous_last_digit = diff_array[0]
+            first = False
+        else:
+            diff_array.insert(0, diff_array[0] - previous_last_digit)
+            previous_last_digit = diff_array[0]
+            if idx == len(reversed_matrix) - 1:
+                return previous_last_digit
+
+
+def sum_extrapolations(input_data: List[str], reverse: bool = False) -> int:
     extrapolations_sum = 0
     for line in input_data:
         history = process_history(line)
         diff_matrix = generate_differences_matrix(history)
-        extrapolations_sum += extrapolate(diff_matrix)
+        if reverse:
+            extrapolations_sum += backwards_extrapolate(diff_matrix)
+        else:
+            extrapolations_sum += extrapolate(diff_matrix)
     return extrapolations_sum
 
 
 print(f"Part One: {sum_extrapolations(lines)}")
+print(f"Part Two: {sum_extrapolations(lines, reverse=True)}")
