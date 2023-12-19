@@ -72,4 +72,12 @@ def extrapolate(difference_matrix: List[List[int]]) -> int:
 
 
 def sum_extrapolations(input_data: List[str]) -> int:
-    pass
+    extrapolations_sum = 0
+    for line in input_data:
+        history = process_history(line)
+        diff_matrix = generate_differences_matrix(history)
+        extrapolations_sum += extrapolate(diff_matrix)
+    return extrapolations_sum
+
+
+print(f"Part One: {sum_extrapolations(lines)}")
