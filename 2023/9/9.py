@@ -15,6 +15,7 @@ def process_history(line: str) -> List[int]:
 
 
 test_processed_line = process_history(test_lines[0])
+test_heavy_line = process_history(lines[0])
 
 
 def generate_diff_line(processed_line: List[int]) -> List[int]:
@@ -51,4 +52,24 @@ def generate_differences_matrix(
         )
 
 
-print(generate_differences_matrix(test_processed_line))
+def extrapolate(difference_matrix: List[List[int]]) -> int:
+    """
+    Take a matrix of differences and extrapolate the next value in the history that generated the
+    matrix. Return the extrapolated value as an integer.
+    """
+    reversed_matrix = difference_matrix[::-1]
+    first = True
+    for idx, diff_array in enumerate(reversed_matrix):
+        if first:
+            diff_array.append(0)
+            previous_last_digit = diff_array[-1]
+            first = False
+        else:
+            diff_array.append(diff_array[-1] + previous_last_digit)
+            previous_last_digit = diff_array[-1]
+            if idx == len(reversed_matrix) - 1:
+                return previous_last_digit
+
+
+def sum_extrapolations(input_data: List[str]) -> int:
+    pass
